@@ -1,0 +1,42 @@
+.instructions {
+  animation: fadeIn 0.3s;
+}
+
+.instructions h3 {
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+
+.instructions h4 {
+  color: var(--dark);
+  margin-bottom: 0.5rem;
+}
+
+.instructions ul,
+.instructions ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.instructions li {
+  margin-bottom: 0.5rem;
+}
+
+.code-block {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 1rem;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  margin-top: 1rem;
+  white-space: pre;
+}
+
+
+
+
+
+
+
