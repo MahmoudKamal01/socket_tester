@@ -1,80 +1,97 @@
-import { useState } from 'react'
-import './Login.css'
-import { tokenManager } from '../utils/tokenManager'
+import { useState } from 'react';
+import './Login.css';
+import { tokenManager } from '../utils/tokenManager';
 
 const Login = ({ onLogin }) => {
-  const [serverUrl, setServerUrl] = useState('http://localhost:5000')
-  const [email, setEmail] = useState('doctor@techtrax.com')
-  const [password, setPassword] = useState('')
-  const [token, setToken] = useState('')
-  const [useToken, setUseToken] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [serverUrl, setServerUrl] = useState('http://localhost:5000');
+  const [email, setEmail] = useState('doctor@techtrax.com');
+  const [password, setPassword] = useState('');
+  const [token, setToken] = useState('');
+  const [useToken, setUseToken] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleLoginWithCredentials = async (e) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
     try {
-      const response = await fetch(`${serverUrl}/api/auth/login`, {
+      const response = await fetch(`${serverUrl}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-      })
+      });
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (response.ok) {
         // Handle different response structures
-        const accessToken = data.data?.tokens?.accessToken || data.data?.token || data.token || data.data?.accessToken
-        const refreshToken = data.data?.tokens?.refreshToken || data.data?.refreshToken
-        
+        const accessToken =
+          data.data?.tokens?.accessToken ||
+          data.data?.token ||
+          data.token ||
+          data.data?.accessToken;
+        const refreshToken =
+          data.data?.tokens?.refreshToken || data.data?.refreshToken;
+
         if (accessToken) {
-          console.log('Login successful, tokens received')
-          
+          console.log('Login successful, tokens received');
+
           // Store both tokens
-          tokenManager.setTokens(accessToken, refreshToken || accessToken)
-          
-          onLogin(accessToken)
+          tokenManager.setTokens(accessToken, refreshToken || accessToken);
+
+          onLogin(accessToken);
         } else {
-          console.error('No token in response:', data)
-          setError('Login successful but no token received. Check console for response details.')
+          console.error('No token in response:', data);
+          setError(
+            'Login successful but no token received. Check console for response details.'
+          );
         }
       } else {
-        setError(data.message || 'Login failed')
+        setError(data.message || 'Login failed');
       }
     } catch (err) {
-      console.error('Login error:', err)
-      setError('Failed to connect to server. Make sure the backend is running on ' + serverUrl)
+      console.error('Login error:', err);
+      setError(
+        'Failed to connect to server. Make sure the backend is running on ' +
+          serverUrl
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleLoginWithToken = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     if (token.trim()) {
-      onLogin(token.trim())
+      onLogin(token.trim());
     } else {
-      setError('Please enter a valid token')
+      setError('Please enter a valid token');
     }
-  }
+  };
 
   return (
     <div className="login-container">
       <div className="login-box card">
         <h1>🔌 TechTrax Socket Tester</h1>
-        <p className="text-muted mb-3">Test all Socket.IO modules in real-time</p>
+        <p className="text-muted mb-3">
+          Test all Socket.IO modules in real-time
+        </p>
 
         <div className="alert info mb-3">
           <strong>📝 Before you start:</strong>
           <ol>
-            <li>Make sure the backend server is running on <code>http://localhost:5000</code></li>
+            <li>
+              Make sure the backend server is running on{' '}
+              <code>http://localhost:5000</code>
+            </li>
             <li>You need a valid JWT token to connect</li>
-            <li>You can either login with credentials or paste a token directly</li>
+            <li>
+              You can either login with credentials or paste a token directly
+            </li>
           </ol>
         </div>
 
@@ -93,11 +110,7 @@ const Login = ({ onLogin }) => {
           </button>
         </div>
 
-        {error && (
-          <div className="alert danger">
-            {error}
-          </div>
-        )}
+        {error && <div className="alert danger">{error}</div>}
 
         {!useToken ? (
           <form onSubmit={handleLoginWithCredentials}>
@@ -133,16 +146,13 @@ const Login = ({ onLogin }) => {
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={loading}
-              style={{ width: '100%' }}
-            >
+            <button type="submit" disabled={loading} style={{ width: '100%' }}>
               {loading ? 'Logging in...' : 'Login'}
             </button>
 
             <p className="text-small text-muted mt-2">
-              Don't have credentials? Switch to "Use Token" tab and paste your JWT token
+              Don't have credentials? Switch to "Use Token" tab and paste your
+              JWT token
             </p>
           </form>
         ) : (
@@ -168,7 +178,7 @@ const Login = ({ onLogin }) => {
             <p className="text-small text-muted mt-2">
               To get a token:
               <br />
-              1. POST to <code>http://localhost:5000/api/auth/login</code>
+              1. POST to <code>http://localhost:5000/auth/login</code>
               <br />
               2. Copy the token from the response
             </p>
@@ -176,8 +186,7 @@ const Login = ({ onLogin }) => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
-
+export default Login;
